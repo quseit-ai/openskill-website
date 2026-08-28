@@ -40,6 +40,7 @@ nav:
       - zh/skill-practice/index.md
   - 技能分享:
       - zh/skill-sharing/index.md
+      - QAgent:把"自然语言"变成企业办公新操作系统的智能体助手: zh/skill-sharing/qagent-introduction.md
   - 应用案例:
       - zh/use-cases/index.md
 

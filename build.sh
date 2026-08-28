@@ -86,10 +86,26 @@ if [ -f docs/CNAME ]; then
 fi
 
 # Remove "Made with Material for MkDocs" footer from all HTML files
+# Use a portable sed: -i '' is BSD/macOS, -i without arg is GNU (Linux/MSYS/Git Bash).
+# Detect GNU vs BSD by checking sed --version output.
 echo "Removing MkDocs Material footer..."
-for f in site/*.html site/*/*.html site/*/*/*.html; do
-    [ -f "$f" ] && sed -i '' '/Made with/,/<\/a>/d' "$f"
-done
+remove_footer() {
+  # BSD sed: sed -i '' '...' file
+  # GNU sed: sed -i '...' file
+  if sed --version >/dev/null 2>&1; then
+    sed -i '/Made with/,/<\/a>/d' "$1"
+  else
+    sed -i '' '/Made with/,/<\/a>/d' "$1"
+  fi
+}
+# Build the list first (avoids "file changed" warnings from find/sed interplay)
+html_files=$(find site -name "*.html" -type f 2>/dev/null)
+export -f remove_footer 2>/dev/null || true
+if [ -n "$html_files" ]; then
+  echo "$html_files" | while IFS= read -r f; do
+    [ -f "$f" ] && remove_footer "$f"
+  done
+fi
 
 echo ""
 echo "Build complete!"
