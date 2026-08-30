@@ -4,4 +4,4 @@
 
 ## 内容列表
 
-敬请期待...
+- [基于Claude的可自我进化AI智能体：Warp的规模化落地实践](xk-2026-08-28-warp-self-evolving-agent-v1.0.md)
