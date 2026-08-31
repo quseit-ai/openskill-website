@@ -1,83 +1,88 @@
 ---
-title: Self-Evolving AI Agents on Claude: Warp's Practice at Scale
+title: 基于Claude的可自我进化AI智能体：Warp的规模化落地实践
 date: 2026-08-28
 version: 1.0
-tags: [Claude, Agent Skills, Self-Evolving, AI Agent, Warp, Code Review, Workflow]
+tags: [Claude, Agent Skills, 自我进化, AI智能体, Warp, 代码评审, 工作流]
 ---
 
-# Self-Evolving AI Agents on Claude: Warp's Practice at Scale
+# 基于Claude的可自我进化AI智能体：Warp的规模化落地实践
 
-As AI agents go mainstream, most general-purpose agents share common pain points: unstable output, no ability to iterate on themselves, and poor fit for specialized development scenarios. Even when the initial prompt gets 80% of the task right, the user experience still suffers from messy, inconsistent output. Warp ran headfirst into this problem and reworked its product strategy around it, polishing the experience for nearly a million developers worldwide.
+在AI智能体快速普及的当下，多数通用智能体普遍存在输出不稳定、无法自主迭代、难以适配专业开发场景等痛点。即便初代提示词可以完成 80% 的任务，依然会给用户带来体验糟糕、输出杂乱的问题。Warp 切身遇到了该痛点，并以此调整产品策略，为全球近百万开发者优化了使用体验。
 
-Founded in 2020, Warp focuses on AI-native terminals and agent development environments, built on the Claude platform. Its tech stack spans Rust, Golang, GitHub Actions, and Oz, its in-house agent orchestration platform. The company has raised $73 million in total funding, serves 800K monthly active developers, and is used by 56% of the Fortune 500. The platform has hosted over 10 million Claude Code sessions, runs more than 400K sessions per week, and its agents have exchanged over 40 million messages. That said, Warp's internal code review agent once had a messy-output problem — engineers complained it produced useless comments of low quality.
+Warp 创立于 2020 年，主打 AI 终端与智能体开发环境，基于 Claude 平台搭建，技术栈涵盖 Rust、Golang、GitHub Actions 以及自研智能体编排平台 Oz。公司累计融资 7300 万美元，拥有 80 万月活开发者，服务 56% 的财富 500 强企业；平台累计完成 1000 万次 Claude Code 会话，周均运行超 40 万次，智能体总对话量突破 4000 万次。不过该团队的内部代码评审智能体曾出现输出杂乱问题，工程师反馈其会产出无效评论，内容质量偏低。
 
-The team's first fix was reactive: manually rewriting prompts based on issues exposed during code review. This improved output usability, but it didn't scale. Tuning context config files such as AGENTS.md helped somewhat, yet still treated the symptom rather than the cause.
+团队一开始采用应急补救方案：根据代码评审过程中暴露出的问题，手动改写提示词。这种方式虽然提升了输出可用性，但无法规模化。优化 AGENTS.md 这类上下文配置文件同样起到一定作用，但依旧治标不治本。
 
-Eventually the team identified the core issue: no matter what job an agent performs, once a session ends, feedback about the agent is usually lost — leaving the agent's iteration loop missing its most critical input. Their solution: build a framework based on Agent Skills to create self-improving agents, so that feedback keeps accumulating and output quality keeps getting polished over time.
-
----
-
-## Company Overview: Warp's AI Development Capability Has Reached Scale
-
-Public records show that Warp, founded in 2020, is a professional AI terminal and intelligent development environment provider serving developers worldwide, with mature commercialization and technical delivery capabilities. To date, the company has raised $73 million, serves 800K monthly active developers, and counts 56% of the Fortune 500 among its users.
-
-Within the Claude ecosystem, the Warp platform has run over 10 million Claude Code sessions, adds more than 400K effective sessions per week, and its agents have exchanged over 40 million messages — making it one of the most widely deployed, most broadly applied developer tools in the Claude ecosystem. Its technical approach carries substantial reference value for the industry.
-
-According to the team, Warp's own code review agent previously exhibited problems common across the industry: verbose output, unprofessional review suggestions, and poor alignment with business standards, hurting team productivity. Early optimization attempts — manually editing prompts and tuning context config files — delivered only temporary improvements, with no scalable, sustainable iteration mechanism, so agent capability never kept improving.
-
-After further technical iteration, Warp settled on its core optimization direction: abandoning traditional prompt-stacking in favor of a self-improving agent system built on Claude's file-based Agent Skills architecture — one that continuously accumulates knowledge, reviews itself automatically, and collaborates with humans.
+最终团队意识到核心问题：无论智能体承担什么工作，会话结束之后，针对智能体的反馈通常就会丢失，智能体迭代流程就此缺失关键信息。他们给出的解决方案：搭建一套基于智能体技能（Agent Skills）的框架，打造自我迭代智能体，让反馈可以持续沉淀，不断打磨、优化智能体输出效果。
 
 ---
 
-## Core Architecture: A Two-Layer Skill Loop for Autonomous Agent Evolution
+## 落地主体概况：Warp 规模化AI开发能力已成熟
 
-The self-improving agent framework is built on a two-layer skill architecture. By separating business execution from retrospective optimization, combined with a human final-review mechanism, it closes the full loop of "business execution — feedback collection — autonomous optimization — capability update," solving the capability-stagnation problem of traditional agents.
+公开资料显示，Warp 成立于2020年，是面向全球开发者的专业AI终端与智能开发环境服务商，目前已具备成熟的商业化与技术落地能力。截至目前，公司累计完成7300万美元融资，平台月活跃开发者数量达80万，财富500强企业中56%均已接入使用其产品。
 
-### 1. Inner Layer — Base Skills: Standardized Business Execution
+在 Claude 技术生态落地层面，Warp 平台累计运行超1000万次 Claude Code 会话，每周新增有效会话超40万次，智能体累计对话量突破4000万次，是 Claude 生态中落地规模最大、应用场景最丰富的开发者工具产品之一，其技术方案具备极高的行业参考价值。
 
-Base skills are the agent's core business execution modules. They encapsulate domain knowledge, workflows, industry standards, and business rules as standalone files, replacing lengthy prompt configurations. Day-to-day automated work such as code review, issue triage, and requirement analysis all runs on these modules — no redundant context reloading needed, which improves both stability and efficiency.
+据官方披露，Warp 此前自研的代码评审智能体同样存在行业共性问题，智能体输出内容冗余、评审建议不专业、贴合业务规范度低，影响团队开发效率。团队初期通过人工修改提示词、优化上下文配置文件等方式进行优化，仅能临时改善输出效果，无法形成规模化、常态化的迭代机制，智能体能力始终无法持续升级。
 
-### 2. Outer Layer — Iteration Skills: Automated Retrospection and Optimization
-
-Iteration skills are the framework's core innovation. They do not participate in business execution; instead, they run autonomously on a schedule. Their job is to harvest and organize human feedback — misjudgments, non-compliant output, missed business rules, and other optimization signals.
-
-The module automatically compares the agent's historical output against human corrections, distills business rules, produces minimal, fine-grained skill update proposals, and submits update PRs automatically — turning human feedback into technical optimization with no manual plumbing.
-
-### 3. Human Final Review: Keeping AI Evolution Under Control
-
-To mitigate compliance risks and logic gaps from autonomous iteration, the framework keeps humans in the loop for final review. Every automated skill-modification proposal must pass a standardized human review process; only after approval and merge does the optimization take effect and propagate to the agent's business modules. This preserves the efficiency of AI-driven iteration while keeping humans in control, preventing capability drift.
+经过技术迭代，Warp 最终确定核心优化方向，摒弃传统提示词堆砌的开发模式，基于 Claude Agent Skills 文件化知识架构，搭建起一套可持续沉淀、自动复盘、人机协同的智能体自我迭代体系。
 
 ---
 
-## Field Case: GitHub Issue Triage Proves the Iteration Loop
+## 核心技术架构：双层技能闭环实现智能体自主进化
 
-Warp validated the framework publicly using its GitHub Issue triage scenario. Its issue classification agent automatically estimates ticket difficulty, applies labels, and suggests fix directions. But the first version of its base skill had a rule gap: it couldn't recognize the "ready to spec" label, so some business tickets were triaged inaccurately.
+本次落地的自我迭代智能体框架，核心为双层技能架构，通过业务执行与复盘优化分离的设计，搭配人工终审机制，实现「业务运行—反馈收集—自主优化—能力更新」的完整闭环，彻底解决传统智能体能力固化问题。
 
-To fix it, maintainers submitted precise feedback directly in existing ticket comments — clarifying when the label applies and how to judge it. No extra forms were required; the optimization signal was captured through the existing workflow.
+### 一、内层基础技能：标准化业务执行载体
 
-The outer iteration skill then triggered automatically, harvesting the valid feedback via companion scripts and distilling a standardized business rule: genuine business tickets should be labeled "ready to spec" even when no concrete UI/UX plan has been spelled out. Based on that rule, the module automatically modified the base skill file and opened an update PR. Once humans approved and merged it, the agent upgraded immediately, closing the classification gap for good.
+基础技能为智能体的核心业务执行模块，以独立文件形式封装领域知识、工作流程、行业规范与业务标准，替代传统冗长的提示词配置。智能体日常开展代码评审、问题分类、需求梳理等自动化工作，均依托该模块运行，无需重复加载冗余上下文，有效提升任务执行的稳定性与高效性。
 
-According to Warp, a single piece of precise human feedback becomes permanent agent capability. As scenario-specific feedback keeps accumulating, agent capability keeps iterating and accuracy keeps rising. The model is now fully deployed across Warp's open-source repositories, covering requirement writing, code review, and issue handling.
+### 二、外层迭代技能：自动化复盘优化核心
 
----
+迭代技能为整套框架的核心创新模块，该模块不参与具体业务执行，以定时调度的方式自主运行。其核心功能为抓取、梳理人工反馈数据，涵盖智能体判断偏差、输出内容不合规、业务规则遗漏等各类优化信号。
 
-## Six Ground Rules for Building Self-Improving Agents
+模块会自动对比智能体历史输出结果与人工修正内容，精准提炼业务规则，生成最小化、精细化的技能优化方案，并自动提交代码更新PR，实现从人工反馈到技术优化的自动化流转。
 
-Drawing on its experience at scale, the Warp team published six development guidelines for self-improving agents, offering a standardized reference for similar projects:
+### 三、人工终审机制：保障AI迭代可控性
 
-1. **Prefer principle-based guidance**: avoid rigid piles of fine-grained rules; lead with directional, first-principles guidance that leaves room for reasoning and improves generalization across scenarios.
-2. **Document the "why" behind rules**: annotate business rules with their rationale inside skill files, so the agent understands execution logic rather than mechanically copying instructions — essential for complex, changing business scenarios.
-3. **Low-friction feedback collection**: embed feedback entry points into existing workflows (PRs, tickets, comments) so no extra user action is needed, keeping optimization signals flowing continuously.
-4. **Prioritize feedback quality**: precise, scenario-specific feedback from domain experts is worth far more than volumes of shallow feedback — it's the core effective signal for agent iteration.
-5. **Keep skill architecture lightweight**: use progressive disclosure — split skill files, resource scripts, and reference documents, loading context on demand to avoid bloat and improve runtime efficiency.
-6. **Reuse the iteration core**: retrospective outer skills are generic — build once, reuse across code review, issue handling, requirement management, and more, dramatically cutting development cost.
+为规避自主迭代的合规风险与逻辑漏洞，整套框架保留人工终审环节。所有智能体技能的自动修改方案，均需通过标准化人工审核流程，审核通过并合并更新后，优化能力才会正式生效，同步更新至智能体业务模块。该机制既保留了AI自动化迭代的高效性，又实现了人为可控，避免智能体出现能力偏差。
 
 ---
 
-## Industry Impact: A New Paradigm for Iterating AI Agents at Scale
+## 落地实战案例：GitHub Issue智能分类场景验证迭代能力
 
-Industry analysts note that traditional AI agent development is human-adapts-to-AI: staff repeatedly debug prompts, patch output bugs, and tune parameters — costly, slow, and incapable of continuous evolution.
+Warp 官方以 GitHub Issue 智能分类场景为落地案例，公开验证了该迭代框架的实际效果。据悉，Warp 自研的Issue分类智能体可自动完成工单难度评估、标签归类、修复方向建议等工作，但初代基础技能存在规则漏洞，无法识别「可编写方案」专属标签，导致部分业务工单分类不精准。
 
-The solution jointly delivered by Warp and Anthropic flips that model, letting AI adapt proactively to the business. Corrections, business standards, and hands-on know-how from daily work all automatically settle into the agent's fixed capabilities, transforming AI from a one-off automation tool into a digital asset that grows and adapts to the business over the long term.
+针对该问题，运维人员在原有工单评论场景中提交精准反馈，明确标签适用场景与判断逻辑，全程无需额外提交表单，依托现有工作流完成优化数据沉淀。
 
-Built on Claude's mature skills architecture, the approach is low-friction, reusable, scalable, and controllable. It addresses the core enterprise pain points of deploying agents — hard to land, slow to iterate, poor to adapt — and offers a fresh technical paradigm for AI automation, enterprise agent deployment, and industry AI adoption. It may well define the mainstream direction of next-generation agent technology.
+随后外层迭代技能自动触发运行，通过配套脚本抓取有效反馈信息，提炼标准化业务规则：真实有效业务类工单，即便未明确UI、UX落地方案，仍需标注「可编写方案」标签。基于该规则，模块自动修改基础技能文件并提交更新PR，经人工审核合并后，智能体即刻完成能力升级，彻底修复原有分类漏洞。
+
+官方表示，单条精准的人工反馈可转化为智能体的永久业务能力，大量场景化反馈持续沉淀，可推动智能体能力持续迭代、精准度不断提升。目前该模式已全面落地于 Warp 开源仓库，覆盖需求编写、代码评审、工单处置等全场景智能体。
+
+---
+
+## 官方公布六大落地准则，规范智能体迭代开发
+
+结合规模化落地经验，Warp 团队对外公布了自我迭代智能体的开发落地标准，为行业同类项目提供标准化参考，核心准则共六项：
+
+一是遵循原则化指导，摒弃死板的精细化规则堆砌，以方向性、原理性指导为主，赋予智能体推理空间，提升场景泛化能力；
+
+二是明确规则底层逻辑，在技能文件中同步标注业务规则的执行依据与核心原因，让智能体理解执行逻辑，而非机械复刻指令，适配复杂多变的业务场景；
+
+三是低门槛收集反馈，将反馈入口嵌入PR、工单、评论等原有工作流程，无需用户额外操作，保障优化信号持续、高效沉淀；
+
+四是优先保障反馈质量，相较于海量浅层反馈，领域专家的精准、场景化反馈价值更高，是智能体迭代的核心有效信号；
+
+五是轻量化技能架构，采用渐进式披露模式，拆分技能文件、资源脚本与参考文档，按需加载上下文内容，避免资源冗余、提升运行效率；
+
+六是复用迭代核心模块，优化复盘类外层技能具备通用性，一次开发可复用至代码评审、工单处理、需求管理等多类智能体场景，大幅降低开发成本。
+
+---
+
+## 行业价值：开启AI智能体规模化迭代新范式
+
+行业分析指出，传统AI智能体开发模式以人工适配AI为主，依赖工作人员反复调试提示词、修复输出漏洞、优化参数配置，成本高、效率低、无法持续进化。
+
+Warp 与 Anthropic 联合落地的这套技术方案，实现了模式反转，让AI主动适配企业业务场景。团队日常工作中的纠错内容、业务规范、实操经验均可自动沉淀为智能体的固定能力，让AI从一次性自动化工具，转变为可长期成长、持续适配业务的数字化载体。
+
+该方案依托 Claude 平台成熟的技能架构，具备低门槛、可复用、可规模化、可控性强等优势，有效解决了企业级AI智能体落地难、迭代慢、适配差的核心痛点，为AI自动化、企业智能体部署、行业AI落地提供了全新的技术范式，或将成为下一代Agent技术的主流发展方向。
