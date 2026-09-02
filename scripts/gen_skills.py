@@ -25,6 +25,7 @@ except ImportError:
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS_DIR = ROOT / "skills"
 DOCS_ZH = ROOT / "docs" / "zh"
+DOCS_EN = ROOT / "docs" / "en"
 OUT_DIR = DOCS_ZH / "skills"
 COVERS_DIR = ROOT / "docs" / "static" / "covers"
 
@@ -86,7 +87,40 @@ def fetch_video_cover(slug: str, video: dict) -> str:
 
 REQUIRED_FIELDS = ("title", "description", "category")
 
-BADGE_CLASS = {"热门": "os-badge--hot", "推荐": "os-badge--rec"}
+# 徽章样式:中英文徽章值都映射到同一套样式类
+BADGE_CLASS = {"热门": "os-badge--hot", "推荐": "os-badge--rec", "Hot": "os-badge--hot", "Featured": "os-badge--rec"}
+
+# 首页界面文案(英文缺失的字段自动回退中文)
+UI_TEXT = {
+    "zh": {
+        "all_cats": "全部 Skills",
+        "side_title": "分类",
+        "result_count": '共 <b id="os-count">{total}</b> 个结果',
+        "search_ph": "搜索你想要的 Skill...",
+        "hot_search": "热门搜索",
+        "empty": "没有找到匹配的 Skill,换个关键词试试",
+        "try_btn": "一键试用",
+        "repo_btn": "项目地址",
+        "play_aria": "播放视频讲解",
+        "watch_on": "在{platform}观看 ↗",
+        "close": "关闭",
+        "platform_names": {"bilibili": "B站", "douyin": "抖音", "youtube": "YouTube"},
+    },
+    "en": {
+        "all_cats": "All Skills",
+        "side_title": "Categories",
+        "result_count": '<b id="os-count">{total}</b> results',
+        "search_ph": "Search skills...",
+        "hot_search": "Popular",
+        "empty": "No matching skills found, try another keyword",
+        "try_btn": "Try it",
+        "repo_btn": "GitHub",
+        "play_aria": "Play video",
+        "watch_on": "Watch on {platform} ↗",
+        "close": "Close",
+        "platform_names": {"bilibili": "Bilibili", "douyin": "Douyin", "youtube": "YouTube"},
+    },
+}
 
 
 def parse_skill(path: Path) -> dict:
@@ -98,12 +132,20 @@ def parse_skill(path: Path) -> dict:
     for field in REQUIRED_FIELDS:
         if not fm.get(field):
             raise ValueError(f"{path.name}: 缺少必填字段 `{field}`")
+    # 英文正文:可选的 <slug>.en.md(纯 Markdown 正文),缺失时英文详情页回退中文正文
+    en_body_path = SKILLS_DIR / f"{path.stem}.en.md"
+    body_en = en_body_path.read_text(encoding="utf-8").strip() if en_body_path.exists() else ""
     return {
         "slug": path.stem,
         "title": str(fm["title"]),
         "description": str(fm["description"]),
         "category": str(fm["category"]),
         "tags": [str(t) for t in (fm.get("tags") or [])],
+        "title_en": str(fm["title_en"]) if fm.get("title_en") else "",
+        "description_en": str(fm["description_en"]) if fm.get("description_en") else "",
+        "category_en": str(fm["category_en"]) if fm.get("category_en") else "",
+        "tags_en": [str(t) for t in (fm.get("tags_en") or [])],
+        "badge_en": str(fm["badge_en"]) if fm.get("badge_en") else "",
         "badge": str(fm["badge"]) if fm.get("badge") else "",
         "order": int(fm.get("order") or 999),
         "cover": str(fm.get("cover") or ""),
@@ -111,7 +153,17 @@ def parse_skill(path: Path) -> dict:
         "repo": str(fm.get("repo") or ""),
         "video": fm.get("video") or None,
         "body": m.group(2).strip(),
+        "body_en": body_en,
     }
+
+
+def localized(s: dict, lang: str, field: str) -> str:
+    """取本地化字段,英文缺失时回退中文。"""
+    if lang == "en":
+        v = s.get(f"{field}_en") or ""
+        if v:
+            return v
+    return s[field]
 
 
 def iframe(src: str, title: str) -> str:
@@ -157,17 +209,25 @@ def video_embed(video: dict, skill_title: str) -> str:
     )
 
 
-def render_card(s: dict) -> str:
+def render_card(s: dict, lang: str = "zh") -> str:
+    t = UI_TEXT[lang]
     slug = s["slug"]
+    title = localized(s, lang, "title")
+    desc = localized(s, lang, "description")
+    cat = localized(s, lang, "category")
+    tags = (s["tags_en"] or s["tags"]) if lang == "en" else s["tags"]
+    badge = (s.get("badge_en") or s["badge"]) if lang == "en" else s["badge"]
     badge_html = ""
-    if s["badge"]:
-        badge_cls = BADGE_CLASS.get(s["badge"], "")
-        badge_html = f'<span class="os-badge {badge_cls}">{html.escape(s["badge"])}</span>'
-    search_text = html.escape(" ".join([s["title"], s["description"], s["category"], *s["tags"]]).lower())
+    if badge:
+        badge_cls = BADGE_CLASS.get(badge, "")
+        badge_html = f'<span class="os-badge {badge_cls}">{html.escape(badge)}</span>'
+    search_text = html.escape(
+        " ".join([title, desc, cat, *tags, s["title"], s["description"], *s["tags"]]).lower()
+    )
     repo_html = ""
     if s.get("repo"):
         repo_html = (
-            f'<a class="os-btn os-btn--ghost" href="{html.escape(s["repo"])}" target="_blank" rel="noopener">项目地址</a>')
+            f'<a class="os-btn os-btn--ghost" href="{html.escape(s["repo"])}" target="_blank" rel="noopener">{t["repo_btn"]}</a>')
     else:
         repo_html = ""
     # 有视频:封面(手动 cover > 自动抓取 > 深色占位)+ 中央播放三角,点击弹窗放大播放;纯文字 Skill 不显示封面
@@ -176,49 +236,51 @@ def render_card(s: dict) -> str:
         img = s.get("cover") or s.get("cover_auto") or ""
         orient = "os-cover--vertical" if str(s["video"].get("platform") or "").lower() == "douyin" else ""
         img_html = (
-            f'<img src="{html.escape(img)}" alt="{html.escape(s["title"])}" loading="lazy">' if img else ""
+            f'<img src="{html.escape(img)}" alt="{html.escape(title)}" loading="lazy">' if img else ""
         )
         play = (
             '<span class="os-play" aria-hidden="true">'
             '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>'
         )
         cover_html = (
-            f'<button class="os-cover os-cover--video {orient}" type="button" '
-            f"aria-label=\"播放视频讲解\" onclick=\"osOpenVideo('{slug}')\">{img_html}{play}</button>"
+            f'<button class="os-cover os-cover--video {orient}" type="button '
+            f'aria-label="{t["play_aria"]}" onclick="osOpenVideo(\'{slug}\')">{img_html}{play}</button>'
         )
     elif s["cover"]:
         cover_html = (
             f'<div class="os-cover"><img src="{html.escape(s["cover"])}" '
-            f'alt="{html.escape(s["title"])}" loading="lazy"></div>'
+            f'alt="{html.escape(title)}" loading="lazy"></div>'
         )
 
     return f"""
-      <article class="os-card" data-cat="{html.escape(s['category'])}" data-search="{search_text}">
+      <article class="os-card" data-cat="{html.escape(cat)}" data-search="{search_text}">
         <a class="os-card-main" href="skills/{slug}/">
           <div class="os-card-head">
-            <span class="os-card-cat">{html.escape(s['category'])}</span>
+            <span class="os-card-cat">{html.escape(cat)}</span>
             {badge_html}
           </div>
-          <h3 class="os-card-title">{html.escape(s['title'])}</h3>
-          <p class="os-card-desc">{html.escape(s['description'])}</p>
+          <h3 class="os-card-title">{html.escape(title)}</h3>
+          <p class="os-card-desc">{html.escape(desc)}</p>
         </a>
         {cover_html}
         <div class="os-card-foot">
-          <a class="os-btn" href="skills/{slug}/">一键试用</a>
+          <a class="os-btn" href="skills/{slug}/">{t["try_btn"]}</a>
           {repo_html}
         </div>
       </article>"""
 
 
-def render_homepage(skills: list) -> str:
+def render_homepage(skills: list, lang: str = "zh") -> str:
+    t = UI_TEXT[lang]
     categories: dict = {}
     for s in skills:
-        categories.setdefault(s["category"], []).append(s)
+        cat = localized(s, lang, "category")
+        categories.setdefault(cat, []).append(s)
 
     total = len(skills)
     cat_items = [
         '<button class="os-cat active" data-cat="all" type="button">'
-        f'<span class="os-cat-name">全部 Skills</span><span class="os-cat-count">{total}</span></button>'
+        f'<span class="os-cat-name">{t["all_cats"]}</span><span class="os-cat-count">{total}</span></button>'
     ]
     for cat, items in categories.items():
         cat_items.append(
@@ -227,32 +289,40 @@ def render_homepage(skills: list) -> str:
             f'<span class="os-cat-count">{len(items)}</span></button>'
         )
 
-    # 热门搜索:取出现频率最高的 6 个标签
+    # 热门搜索:取出现频率最高的 6 个标签(英文站优先用英文标签,缺失回退中文)
     tag_freq: dict = {}
     for s in skills:
-        for t in s["tags"]:
-            tag_freq[t] = tag_freq.get(t, 0) + 1
-    hot_tags = sorted(tag_freq, key=lambda t: -tag_freq[t])[:6]
+        tags = (s["tags_en"] or s["tags"]) if lang == "en" else s["tags"]
+        for tg in tags:
+            tag_freq[tg] = tag_freq.get(tg, 0) + 1
+    hot_tags = sorted(tag_freq, key=lambda tg: -tag_freq[tg])[:6]
     hot_html = "".join(
-        f'<button class="os-hot-tag" type="button">{html.escape(t)}</button>' for t in hot_tags
+        f'<button class="os-hot-tag" type="button">{html.escape(tg)}</button>' for tg in hot_tags
     )
 
-    cards = "\n".join(render_card(s) for s in skills)
+    cards = "\n".join(render_card(s, lang) for s in skills)
     sidebar = "".join(cat_items)
-    platform_names = {"bilibili": "B站", "douyin": "抖音", "youtube": "YouTube"}
 
     def _video_tpl(s: dict) -> str:
         v = s["video"]
         p = str(v.get("platform") or "").lower()
         url = str(v.get("url") or "")
-        ext_url = url if p in platform_names else ""
+        ext_url = url if p in t["platform_names"] else ""
         vert = ' data-vertical="1"' if p == "douyin" else ""
         return (
             f'<template id="os-video-{s["slug"]}"{vert} data-url="{html.escape(ext_url, quote=True)}" '
-            f'data-platform="{platform_names.get(p, "原平台")}">{video_embed(v, s["title"])}</template>'
+            f'data-platform="{t["platform_names"].get(p, "原平台" if lang == "zh" else "platform")}">{video_embed(v, s["title"])}</template>'
         )
 
     video_templates = "\n".join(_video_tpl(s) for s in skills if s["video"])
+
+    if lang == "en":
+        hero_title = 'Discover &amp; Use<br>Powerful <span class="os-grad">Agent Skills</span>'
+        hero_sub = "Explore, learn and launch AI skills in one click to make your Agent stronger"
+    else:
+        hero_title = '发现与使用<br>强大的 <span class="os-grad">Agent Skills</span>'
+        hero_sub = "探索、学习并一键使用各类 AI 技能,让你的 Agent 更强大"
+    watch_tpl = t["watch_on"]
 
     return f"""---
 title: Skills
@@ -266,13 +336,13 @@ hide:
     <div class="os-hero-inner">
       <div class="os-hero-text">
         <div class="os-eyebrow">OpenSkill &middot; Agent Skills Directory</div>
-        <h1>发现与使用<br>强大的 <span class="os-grad">Agent Skills</span></h1>
-        <p class="os-hero-sub">探索、学习并一键使用各类 AI 技能,让你的 Agent 更强大</p>
+        <h1>{hero_title}</h1>
+        <p class="os-hero-sub">{hero_sub}</p>
         <div class="os-search">
-          <input id="os-search-input" type="search" placeholder="搜索你想要的 Skill..." autocomplete="off">
+          <input id="os-search-input" type="search" placeholder="{t["search_ph"]}" autocomplete="off">
           <span class="os-search-hint" aria-hidden="true">&#8984;K</span>
         </div>
-        <div class="os-hot"><span>热门搜索</span>{hot_html}</div>
+        <div class="os-hot"><span>{t["hot_search"]}</span>{hot_html}</div>
       </div>
       <div class="os-hero-stage" aria-hidden="true">
         <div class="os-stage" id="os-stage">
@@ -291,17 +361,17 @@ hide:
 
   <div class="os-layout">
     <aside class="os-side">
-      <div class="os-side-title">分类</div>
+      <div class="os-side-title">{t["side_title"]}</div>
       <nav class="os-cats">{sidebar}</nav>
     </aside>
     <section class="os-main">
       <div class="os-main-head">
-        <span class="os-main-count">共 <b id="os-count">{total}</b> 个结果</span>
+        <span class="os-main-count">{t["result_count"].format(total=total)}</span>
       </div>
       <div class="os-grid" id="os-grid">
 {cards}
       </div>
-      <div class="os-empty" id="os-empty" hidden>没有找到匹配的 Skill,换个关键词试试</div>
+      <div class="os-empty" id="os-empty" hidden>{t["empty"]}</div>
     </section>
   </div>
 </div>
@@ -311,7 +381,7 @@ hide:
 <div class="os-modal" id="os-modal" onclick="if(event.target===this)osCloseVideo()">
   <div class="os-modal-inner">
     <div class="os-modal-box">
-      <button class="os-modal-close" type="button" aria-label="关闭" onclick="osCloseVideo()">&times;</button>
+      <button class="os-modal-close" type="button" aria-label="{t["close"]}" onclick="osCloseVideo()">&times;</button>
       <div class="os-modal-body" id="os-modal-body"></div>
     </div>
     <a class="os-modal-link" id="os-modal-link" href="#" target="_blank" rel="noopener" hidden></a>
@@ -319,6 +389,8 @@ hide:
 </div>
 
 <script>
+var OS_I18N = {{ watchOn: "{watch_tpl}" }};
+
 (function () {{
   var cards = Array.prototype.slice.call(document.querySelectorAll(".os-card"));
   var cats = Array.prototype.slice.call(document.querySelectorAll(".os-cat"));
@@ -402,7 +474,7 @@ function osOpenVideo(slug) {{
   var u = tpl.dataset.url || "";
   if (u && link) {{
     link.href = u;
-    link.textContent = "在" + (tpl.dataset.platform || "原平台") + "观看 ↗";
+    link.textContent = OS_I18N.watchOn.replace("{{platform}}", tpl.dataset.platform || "");
     link.hidden = false;
   }} else if (link) {{
     link.hidden = true;
@@ -447,40 +519,53 @@ document.addEventListener("keydown", function (e) {{
 """
 
 
-def render_detail(s: dict) -> str:
+def render_detail(s: dict, lang: str = "zh") -> str:
+    title = localized(s, lang, "title")
+    cat = localized(s, lang, "category")
+    desc = localized(s, lang, "description")
+    tags = (s["tags_en"] or s["tags"]) if lang == "en" else s["tags"]
+    body = (s.get("body_en") or s["body"]) if lang == "en" else s["body"]
+    if lang == "en":
+        video_h = "## Video Demo"
+        watch_link = "Watch on the original platform ↗"
+        back = "Back to Skills"
+    else:
+        video_h = "## 视频讲解"
+        watch_link = "在平台原站观看 ↗"
+        back = "返回 Skills 首页"
     parts = [
         "---",
-        f"title: {s['title']}",
+        f"title: {title}",
         "not_in_nav: true",
         "---",
         "",
-        f"# {s['title']}",
+        f"# {title}",
         "",
         (
-            f'<div class="os-detail-meta"><span class="os-detail-cat">{html.escape(s["category"])}</span>'
-            + "".join(f'<span class="os-tag">{html.escape(t)}</span>' for t in s["tags"])
+            f'<div class="os-detail-meta"><span class="os-detail-cat">{html.escape(cat)}</span>'
+            + "".join(f'<span class="os-tag">{html.escape(tg)}</span>' for tg in tags)
             + "</div>"
         ),
         "",
-        f"> {s['description']}",
+        f"> {desc}",
         "",
     ]
     if s["video"]:
         parts += [
-            "## 视频讲解",
+            video_h,
             "",
-            video_embed(s["video"], s["title"]),
+            video_embed(s["video"], title),
             "",
         ]
         url = str(s["video"].get("url") or "")
         if url and not url.startswith("/"):
-            parts += [f'[在平台原站观看 ↗]({url}){{ target="_blank" }}', ""]
+            parts += [f'[{watch_link}]({url}){{ target="_blank" }}', ""]
     parts += [
-        s["body"],
+        body,
         "",
         "---",
         "",
-        "[:material-arrow-left: 返回 Skills 首页](../index.md)",
+        f"[:material-arrow-left: {back}](../index.md)",
         "",
     ]
     return "\n".join(parts)
@@ -490,7 +575,10 @@ def main() -> None:
     if not SKILLS_DIR.is_dir():
         sys.exit(f"未找到目录: {SKILLS_DIR}")
 
-    files = sorted(p for p in SKILLS_DIR.glob("*.md") if not p.name.startswith("_"))
+    files = sorted(
+        p for p in SKILLS_DIR.glob("*.md")
+        if not p.name.startswith("_") and not p.name.endswith(".en.md")
+    )
     if not files:
         sys.exit("skills/ 目录下没有任何 .md 文件")
 
@@ -513,12 +601,19 @@ def main() -> None:
             s["cover_auto"] = fetch_video_cover(s["slug"], s["video"])
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    (DOCS_ZH / "index.md").write_text(render_homepage(skills), encoding="utf-8")
+    (DOCS_ZH / "index.md").write_text(render_homepage(skills, "zh"), encoding="utf-8")
     for s in skills:
         (OUT_DIR / f"{s['slug']}.md").write_text(render_detail(s), encoding="utf-8")
 
+    # 英文首页 + 英文详情页:与中文同构,文案/内容用英文字段(缺失回退中文)
+    EN_OUT_DIR = DOCS_EN / "skills"
+    EN_OUT_DIR.mkdir(parents=True, exist_ok=True)
+    (DOCS_EN / "index.md").write_text(render_homepage(skills, "en"), encoding="utf-8")
+    for s in skills:
+        (EN_OUT_DIR / f"{s['slug']}.md").write_text(render_detail(s, "en"), encoding="utf-8")
+
     cats = sorted({s["category"] for s in skills})
-    print(f"已生成首页 + {len(skills)} 个 Skill 详情页(分类: {', '.join(cats)})")
+    print(f"已生成中英双语首页 + {len(skills)} 个 Skill 双语详情页(分类: {', '.join(cats)})")
 
 
 if __name__ == "__main__":

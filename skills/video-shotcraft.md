@@ -3,6 +3,11 @@ title: Video ShotCraft
 description: 把 Claude Code / Codex 变成动效工作室,152 张镜头配方卡 + Remotion,自动产出带镜头运动、转场与电影级音效的产品宣传片。
 category: 视频制作
 tags: [宣传片, 动效, Remotion, 镜头配方, 卡点, 产品视频]
+title_en: Video ShotCraft
+description_en: Turn Claude Code / Codex into a motion studio — 152 shot recipe cards + Remotion to auto-produce product promos with camera moves, transitions and cinematic sound design.
+category_en: Video Creation
+tags_en: [Product Promo, Motion Design, Remotion, Shot Recipes, Beat Sync, Product Video]
+badge_en: ""
 repo: https://github.com/Vincentwei1021/video-shotcraft
 video:
   platform: douyin

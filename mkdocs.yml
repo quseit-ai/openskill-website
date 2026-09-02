@@ -57,3 +57,12 @@ plugins:
         - locale: en
           name: English
           build: true
+          nav_translations:
+            安装配置: Installation
+            技能实践: Skill Practice
+            技能分享: Skill Sharing
+            应用案例: Use Cases
+            更安全地部署OpenClaw：我的容器化隔离实践: "Deploying OpenClaw Safely - My Containerized Isolation Practice"
+            在OpenClaw容器中部署Claude Code（上）：从零开始搭建你的AI开发助手: "Deploy Claude Code in an OpenClaw Container (Part 1)"
+            QAgent:把"自然语言"变成企业办公新操作系统的智能体助手: "QAgent - Turning Natural Language into an Office OS"
+            基于Claude的可自我进化AI智能体：Warp的规模化落地实践: "A Self-Evolving AI Agent Based on Claude - Warp at Scale"

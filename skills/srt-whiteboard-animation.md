@@ -3,6 +3,11 @@ title: SRT 白板手绘动画
 description: 将 SRT 字幕转为按叙事顺序绘制的白板手绘视频,分区遮罩编排 + 流式笔迹绘制,逐步添彩,最终导出 MP4。
 category: 视频制作
 tags: [白板动画, 手绘视频, SRT, 字幕, 视频生成]
+title_en: SRT Whiteboard Animation
+description_en: Turn SRT subtitles into whiteboard hand-drawn videos that follow the narrative order, with zoned mask orchestration, streaming strokes and step-by-step coloring, then export to MP4.
+category_en: Video Creation
+tags_en: [Whiteboard Animation, Hand-drawn Video, SRT, Subtitles, Video Generation]
+badge_en: ""
 repo: https://github.com/geeklee/srt-whiteboard-animation
 video:
   platform: bilibili
