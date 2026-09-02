@@ -12,33 +12,35 @@
         <meta name="author" content="OpenSkill Team">
       
       
-        <link rel="canonical" href="https://openskill.top/en/">
+        <link rel="canonical" href="https://openskill.top/en/installation/bwp-2026-03-25-openclaw-v1.1/">
       
       
+        <link rel="prev" href="../">
       
-        <link rel="next" href="installation/">
+      
+        <link rel="next" href="../bwp-2026-03-26-openclawclaude-code-v1.8/">
       
       
         
-          <link rel="alternate" href="/" hreflang="zh">
+          <link rel="alternate" href="../../../installation/bwp-2026-03-25-openclaw-v1.1/" hreflang="zh">
         
-          <link rel="alternate" href="/en/" hreflang="en">
+          <link rel="alternate" href="./" hreflang="en">
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Skills - OpenSkill.Top</title>
+        <title>更安全地部署OpenClaw：我的容器化隔离实践 - OpenSkill.Top</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -57,9 +59,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-openskilltop" class="md-skip">
+        <a href="#openclaw" class="md-skip">
           Skip to content
         </a>
       
@@ -96,9 +98,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="./" title="OpenSkill.Top" class="md-header__button md-logo" aria-label="OpenSkill.Top" data-md-component="logo">
+    <a href="../../" title="OpenSkill.Top" class="md-header__button md-logo" aria-label="OpenSkill.Top" data-md-component="logo">
       
-  <img src="../static/openskill.png" alt="logo">
+  <img src="../../../static/openskill.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -115,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Skills
+              更安全地部署OpenClaw：我的容器化隔离实践
             
           </span>
         </div>
@@ -136,13 +138,13 @@
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="/" hreflang="zh" class="md-select__link">
+            <a href="../../../installation/bwp-2026-03-25-openclaw-v1.1/" hreflang="zh" class="md-select__link">
               中文
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/en/" hreflang="en" class="md-select__link">
+            <a href="./" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -214,11 +216,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
         
   
   
@@ -235,11 +235,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="installation/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -259,7 +261,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="skill-practice/" class="md-tabs__link">
+        <a href="../../skill-practice/" class="md-tabs__link">
           
   
   
@@ -279,7 +281,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="skill-sharing/" class="md-tabs__link">
+        <a href="../../skill-sharing/" class="md-tabs__link">
           
   
   
@@ -299,7 +301,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="use-cases/" class="md-tabs__link">
+        <a href="../../use-cases/" class="md-tabs__link">
           
   
   
@@ -333,9 +335,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="./" title="OpenSkill.Top" class="md-nav__button md-logo" aria-label="OpenSkill.Top" data-md-component="logo">
+    <a href="../../" title="OpenSkill.Top" class="md-nav__button md-logo" aria-label="OpenSkill.Top" data-md-component="logo">
       
-  <img src="../static/openskill.png" alt="logo">
+  <img src="../../../static/openskill.png" alt="logo">
 
     </a>
     OpenSkill.Top
@@ -345,6 +347,118 @@
     
       
       
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安装配置
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    安装配置
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
   
   
     
@@ -366,7 +480,7 @@
   <span class="md-ellipsis">
     
   
-    Skills
+    更安全地部署OpenClaw：我的容器化隔离实践
   
 
     
@@ -384,7 +498,7 @@
   <span class="md-ellipsis">
     
   
-    Skills
+    更安全地部署OpenClaw：我的容器化隔离实践
   
 
     
@@ -410,10 +524,93 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#navigation" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Navigation
+        我的思路：运行隔离
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        具体操作：三步走
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="具体操作：三步走">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一步：创建隔离容器
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#systemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二步：Systemd自动重启
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三步：安全地远程控制
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        这样部署，我得到了什么
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        几个额外的建议
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写在最后
       
     </span>
   </a>
@@ -427,87 +624,6 @@
     </li>
   
 
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    安装配置
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    安装配置
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Installation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -517,35 +633,7 @@
   
   
     <li class="md-nav__item">
-      <a href="installation/bwp-2026-03-25-openclaw-v1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    更安全地部署OpenClaw：我的容器化隔离实践
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="installation/bwp-2026-03-26-openclawclaude-code-v1.8/" class="md-nav__link">
+      <a href="../bwp-2026-03-26-openclawclaude-code-v1.8/" class="md-nav__link">
         
   
   
@@ -634,7 +722,7 @@
   
   
     <li class="md-nav__item">
-      <a href="skill-practice/" class="md-nav__link">
+      <a href="../../skill-practice/" class="md-nav__link">
         
   
   
@@ -723,7 +811,7 @@
   
   
     <li class="md-nav__item">
-      <a href="skill-sharing/" class="md-nav__link">
+      <a href="../../skill-sharing/" class="md-nav__link">
         
   
   
@@ -751,7 +839,7 @@
   
   
     <li class="md-nav__item">
-      <a href="skill-sharing/qagent-introduction/" class="md-nav__link">
+      <a href="../../skill-sharing/qagent-introduction/" class="md-nav__link">
         
   
   
@@ -779,7 +867,7 @@
   
   
     <li class="md-nav__item">
-      <a href="skill-sharing/xk-2026-08-28-warp-self-evolving-agent-v1.0/" class="md-nav__link">
+      <a href="../../skill-sharing/xk-2026-08-28-warp-self-evolving-agent-v1.0/" class="md-nav__link">
         
   
   
@@ -868,7 +956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="use-cases/" class="md-nav__link">
+      <a href="../../use-cases/" class="md-nav__link">
         
   
   
@@ -923,10 +1011,93 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#navigation" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Navigation
+        我的思路：运行隔离
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        具体操作：三步走
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="具体操作：三步走">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一步：创建隔离容器
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#systemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二步：Systemd自动重启
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三步：安全地远程控制
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        这样部署，我得到了什么
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        几个额外的建议
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写在最后
       
     </span>
   </a>
@@ -950,21 +1121,169 @@
 
 
 
-<h1 id="welcome-to-openskilltop">Welcome to OpenSkill.Top</h1>
-<p>OpenClaw Practice Blog - Explore the possibilities of skill automation workflows.</p>
-<h2 id="navigation">Navigation</h2>
+<h1 id="openclaw">更安全地部署OpenClaw：我的容器化隔离实践</h1>
+<p>国家网络安全通报中心最近预警：全球超20万个OpenClaw互联网资产中，大量暴露于公网的实例存在严重安全隐患——架构缺陷、默认高危配置、漏洞利用门槛低、供应链投毒比例高达10.8%。</p>
+<p><strong>作为在服务器上跑OpenClaw的人，我仔细看了这份通报，决定做一件事：把OpenClaw关进笼子里。</strong></p>
+<p>不是不用它，而是让它既能干活，又碰不到我的核心系统。</p>
+<hr />
+<h2 id="_1">我的思路：运行隔离</h2>
+<p>通报里提到的风险，归根结底都是同一个问题：<strong>OpenClaw和你服务器的边界太模糊了。</strong></p>
 <ul>
-<li><a href="installation/">Installation</a> - Learn how to install and configure OpenClaw</li>
-<li><a href="skill-practice/">Skill Practice</a> - Master OpenClaw for your work and customize skills</li>
-<li><a href="skill-sharing/">Skill Sharing</a> - Discover and share third-party skills</li>
-<li><a href="use-cases/">Use Cases</a> - Explore integrating multiple skills for automated workflows</li>
+<li>默认绑定0.0.0.0，谁都能连</li>
+<li>插件运行在和你一样的权限环境里</li>
+<li>智能体一旦失控，直接操作宿主机</li>
 </ul>
+<p><strong>解决方案很简单：隔离。</strong></p>
+<p>让OpenClaw跑在一个"沙盒"里，它能访问什么、能做什么，全部由你说了算。即使出问题，也只影响那个沙盒。</p>
+<p>我用的是 <strong>Podman</strong>——比Docker更轻量，不需要守护进程，资源占用更少。</p>
+<hr />
+<h2 id="_2">具体操作：三步走</h2>
+<h3 id="_3">第一步：创建隔离容器</h3>
+<pre><code class="language-bash">podman run -d \
+  --name claw \
+  --user root \
+  -p 13000-13005:13000-13005 \
+  -v /data/openclaw-docker/data:/root \
+  -e NODE_OPTIONS=&quot;--max-old-space-size=4096&quot; \
+  ghcr.io/openclaw/openclaw:latest
+</code></pre>
+<p><strong>为什么这样配？</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>我的考虑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--user root</code></td>
+<td>容器内的root，不是宿主机的root。省去容器内权限折腾，又不影响宿主机安全</td>
+</tr>
+<tr>
+<td><code>-p 13000-13005</code></td>
+<td>我预留了6个端口给后续服务用，现在不暴露18789（那个默认管理端口太危险）</td>
+</tr>
+<tr>
+<td><code>-v /data/...:/root</code></td>
+<td>数据持久化到宿主机，容器删了数据还在</td>
+</tr>
+<tr>
+<td><code>NODE_OPTIONS</code></td>
+<td>给Node.js 4GB内存，够用又不至于吃光系统资源</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键点：18789端口没有映射。</strong> 这意味着即使有人扫描到你的服务器，也找不到OpenClaw的默认入口。</p>
+<h3 id="systemd">第二步：Systemd自动重启</h3>
+<p>手动启动的容器，服务器重启后就没了。我要它像系统服务一样稳定：</p>
+<pre><code class="language-bash"># 1. 准备systemd目录
+mkdir -p ~/.config/systemd/user
+
+# 2. 生成服务文件（--restart-policy=always 是关键）
+podman generate systemd --name --restart-policy=always --files claw
+
+# ⚠️ 重要：打开container-claw.service检查
+# 确保没有 podman rm 这种会删容器的操作
+vim container-claw.service
+
+# 3. 复制到systemd目录
+cp container-claw.service ~/.config/systemd/user
+systemctl --user daemon-reload
+
+# 4. 设置开机自启
+systemctl --user enable container-claw.service
+sudo loginctl enable-linger $USER
+
+# 5. 切换到systemd管理
+podman stop claw
+systemctl --user start container-claw.service
+</code></pre>
+<p><strong>验证一下</strong>：</p>
+<pre><code class="language-bash">systemctl --user status container-claw.service
+# 看到 Active: active (running) 就稳了
+</code></pre>
+<p>现在即使服务器重启，OpenClaw也会自动恢复，不需要你登录手动启动。</p>
+<h3 id="_4">第三步：安全地远程控制</h3>
+<p>18789没暴露，我怎么控制OpenClaw？</p>
+<p><strong>答案是：通过IM。</strong></p>
+<pre><code class="language-bash"># 进入容器
+podman exec -it claw /bin/bash
+
+# 运行配置向导
+openclaw onboard
+</code></pre>
+<p>按提示绑定Telegram/Discord/Slack，之后你就可以通过安全的IM通道和OpenClaw交互——不需要暴露任何管理端口到公网。</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>风险</th>
+<th>我的选择</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>直接暴露18789</td>
+<td>极高，通报里说的85%公网暴露就是这个</td>
+<td>❌ 不用</td>
+</tr>
+<tr>
+<td>IM集成</td>
+<td>低，消息通道本身有平台安全机制保护</td>
+<td>✅ 采用</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_5">这样部署，我得到了什么</h2>
+<p>✅ <strong>边界清晰</strong>：OpenClaw被关在容器里，即使智能体"发疯"也出不来<br />
+✅ <strong>端口可控</strong>：只开放必要的服务端口，高危管理端口完全隔离<br />
+✅ <strong>数据安全</strong>：重要数据挂载在宿主机，容器只是"运行环境"<br />
+✅ <strong>自动恢复</strong>：Systemd确保服务高可用，不用手动维护<br />
+✅ <strong>远程安全</strong>：通过IM控制，彻底摆脱端口暴露的风险</p>
+<p><strong>这套方案不是完美的</strong>——它不能阻止你安装恶意插件，也不能修复OpenClaw本身的漏洞。但它做了一件事：<strong>把"一旦被攻破就全盘皆输"变成"即使被攻破也只在沙盒里"。</strong></p>
+<p>对于跑在生产环境的服务器来说，这个区别可能就是"睡一觉起来一切正常"和"紧急修复到凌晨3点"的差距。</p>
+<hr />
+<h2 id="_6">几个额外的建议</h2>
+<p>如果你也准备这么干，这几件事值得注意：</p>
+<p><strong>1. 定期备份数据目录</strong></p>
+<pre><code class="language-bash"># 数据存在这里，记得备份
+cp -r /data/openclaw-docker/data /backup/openclaw-$(date +%Y%m%d)
+</code></pre>
+<p><strong>2. 防火墙限制端口访问</strong>
+即使只映射了13000-13005，也建议用防火墙限制来源IP：</p>
+<pre><code class="language-bash"># 只允许特定IP访问
+ufw allow from 你的IP to any port 13000:13005
+</code></pre>
+<p><strong>3. 插件审慎安装</strong>
+通报里说的10.8%恶意插件比例不是吓唬人。安装前花两分钟看看代码，或者只从可信来源安装。</p>
+<p><strong>4. 定期更新镜像</strong></p>
+<pre><code class="language-bash">podman pull ghcr.io/openclaw/openclaw:latest
+systemctl --user restart container-claw.service
+</code></pre>
+<hr />
+<h2 id="_7">写在最后</h2>
+<p>网络安全通报中心的预警不是让我们不用OpenClaw，而是提醒我们用得更聪明。</p>
+<p>容器化隔离不是什么高深技术，Podman+Systemd的组合也很成熟。<strong>关键是意识到风险在哪里，然后采取行动。</strong></p>
+<p>如果你也在用OpenClaw跑业务，希望这篇文章能给你一些参考。</p>
+<hr />
+<p><strong>我的配置</strong>：
+- 服务器：Linux (Ubuntu 22.04)
+- 容器：Podman 4.x
+- OpenClaw：ghcr.io/openclaw/openclaw:latest</p>
+<p>有问题欢迎交流。</p>
+<hr />
+<p><em>本文采用 Build with Public 方式创作——实战经验，全程透明。</em></p>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -1010,10 +1329,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
