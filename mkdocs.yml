@@ -18,9 +18,11 @@ theme:
     - search.highlight
     - content.tabs.link
     - content.code.copy
+
+extra:
   alternate:
     - name: 中文
-      link: /
+      link: /zh/
       lang: zh
     - name: English
       link: /en/
@@ -28,6 +30,9 @@ theme:
 
 extra_css:
   - stylesheets/extra.css
+
+extra_javascript:
+  - static/lang-switch.js
 
 markdown_extensions:
   - attr_list
