@@ -87,6 +87,16 @@ def fetch_video_cover(slug: str, video: dict) -> str:
 
 REQUIRED_FIELDS = ("title", "description", "category")
 
+
+def _as_list(v) -> list:
+    """标量或列表统一转成去空白的字符串列表。"""
+    if v is None:
+        return []
+    if isinstance(v, list):
+        return [str(x).strip() for x in v if str(x).strip()]
+    s = str(v).strip()
+    return [s] if s else []
+
 # 徽章样式:中英文徽章值都映射到同一套样式类
 BADGE_CLASS = {"热门": "os-badge--hot", "推荐": "os-badge--rec", "Hot": "os-badge--hot", "Featured": "os-badge--rec"}
 
@@ -135,11 +145,16 @@ def parse_skill(path: Path) -> dict:
     # 英文正文:可选的 <slug>.en.md(纯 Markdown 正文),缺失时英文详情页回退中文正文
     en_body_path = SKILLS_DIR / f"{path.stem}.en.md"
     body_en = en_body_path.read_text(encoding="utf-8").strip() if en_body_path.exists() else ""
+    cats = _as_list(fm["category"])
+    if not cats:
+        raise ValueError(f"{path.name}: category 不能为空")
     return {
         "slug": path.stem,
         "title": str(fm["title"]),
         "description": str(fm["description"]),
-        "category": str(fm["category"]),
+        "category": cats[0],
+        "categories": cats,
+        "categories_en": _as_list(fm.get("category_en")),
         "tags": [str(t) for t in (fm.get("tags") or [])],
         "title_en": str(fm["title_en"]) if fm.get("title_en") else "",
         "description_en": str(fm["description_en"]) if fm.get("description_en") else "",
@@ -164,6 +179,11 @@ def localized(s: dict, lang: str, field: str) -> str:
         if v:
             return v
     return s[field]
+
+
+def skill_cats(s: dict, lang: str) -> list:
+    """取本地化分类列表,英文缺失时回退中文。"""
+    return (s["categories_en"] or s["categories"]) if lang == "en" else s["categories"]
 
 
 def iframe(src: str, title: str) -> str:
@@ -214,7 +234,8 @@ def render_card(s: dict, lang: str = "zh") -> str:
     slug = s["slug"]
     title = localized(s, lang, "title")
     desc = localized(s, lang, "description")
-    cat = localized(s, lang, "category")
+    cats = skill_cats(s, lang)
+    cat = " · ".join(cats)
     tags = (s["tags_en"] or s["tags"]) if lang == "en" else s["tags"]
     badge = (s.get("badge_en") or s["badge"]) if lang == "en" else s["badge"]
     badge_html = ""
@@ -243,7 +264,7 @@ def render_card(s: dict, lang: str = "zh") -> str:
             '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>'
         )
         cover_html = (
-            f'<button class="os-cover os-cover--video {orient}" type="button '
+            f'<button class="os-cover os-cover--video {orient}" type="button" '
             f'aria-label="{t["play_aria"]}" onclick="osOpenVideo(\'{slug}\')">{img_html}{play}</button>'
         )
     elif s["cover"]:
@@ -253,7 +274,7 @@ def render_card(s: dict, lang: str = "zh") -> str:
         )
 
     return f"""
-      <article class="os-card" data-cat="{html.escape(cat)}" data-search="{search_text}">
+      <article class="os-card" data-cat="{html.escape("|".join(cats))}" data-search="{search_text}">
         <a class="os-card-main" href="skills/{slug}/">
           <div class="os-card-head">
             <span class="os-card-cat">{html.escape(cat)}</span>
@@ -274,8 +295,8 @@ def render_homepage(skills: list, lang: str = "zh") -> str:
     t = UI_TEXT[lang]
     categories: dict = {}
     for s in skills:
-        cat = localized(s, lang, "category")
-        categories.setdefault(cat, []).append(s)
+        for cat in skill_cats(s, lang):
+            categories.setdefault(cat, []).append(s)
 
     total = len(skills)
     cat_items = [
@@ -402,7 +423,7 @@ var OS_I18N = {{ watchOn: "{watch_tpl}" }};
   function apply() {{
     var shown = 0;
     cards.forEach(function (c) {{
-      var ok = (currentCat === "all" || c.dataset.cat === currentCat) &&
+      var ok = (currentCat === "all" || c.dataset.cat.split("|").indexOf(currentCat) !== -1) &&
                (!query || c.dataset.search.indexOf(query) !== -1);
       c.style.display = ok ? "" : "none";
       if (ok) shown++;
@@ -521,7 +542,7 @@ document.addEventListener("keydown", function (e) {{
 
 def render_detail(s: dict, lang: str = "zh") -> str:
     title = localized(s, lang, "title")
-    cat = localized(s, lang, "category")
+    cat = " · ".join(skill_cats(s, lang))
     desc = localized(s, lang, "description")
     tags = (s["tags_en"] or s["tags"]) if lang == "en" else s["tags"]
     body = (s.get("body_en") or s["body"]) if lang == "en" else s["body"]
@@ -612,7 +633,7 @@ def main() -> None:
     for s in skills:
         (EN_OUT_DIR / f"{s['slug']}.md").write_text(render_detail(s, "en"), encoding="utf-8")
 
-    cats = sorted({s["category"] for s in skills})
+    cats = sorted({c for s in skills for c in s["categories"]})
     print(f"已生成中英双语首页 + {len(skills)} 个 Skill 双语详情页(分类: {', '.join(cats)})")
 
 
