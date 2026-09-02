@@ -18,7 +18,7 @@ version: v1.8
 
 折腾了一阵，还真跑通了：把 Claude Code 装进 OpenClaw 容器，飞书当入口，国内网络环境下稳定运行。
 
-昨天写了[安全部署 OpenClaw](https://www.openskill.top/zh/installation/bwp-2026-03-25-openclaw-v1.1/) 的部分，今天接着往下——怎么在容器里装好 Claude Code，再通过飞书把它叫起来。
+昨天写了[安全部署 OpenClaw](https://www.openskill.top/installation/bwp-2026-03-25-openclaw-v1.1/) 的部分，今天接着往下——怎么在容器里装好 Claude Code，再通过飞书把它叫起来。
 
 整个过程我会分三篇写：
 - **上篇（就是这篇）**：容器内安装 Claude Code + 飞书桥接，跑通基础链路
@@ -57,7 +57,7 @@ version: v1.8
 
 ### 进入容器
 
-假设你已经跟着[上一篇](https://www.openskill.top/zh/installation/bwp-2026-03-25-openclaw-v1.1/)把 OpenClaw 跑起来了，先确认容器还在：
+假设你已经跟着[上一篇](https://www.openskill.top/installation/bwp-2026-03-25-openclaw-v1.1/)把 OpenClaw 跑起来了，先确认容器还在：
 
 ```bash
 docker ps | grep openclaw

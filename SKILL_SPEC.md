@@ -11,7 +11,7 @@ skills/
 └── qagent-office.md
 ```
 
-- 文件名规则:小写字母、数字、连字符,如 `web-search.md`。构建后详情页地址为 `https://openskill.top/zh/skills/web-search/`。
+- 文件名规则:小写字母、数字、连字符,如 `web-search.md`。构建后详情页地址为 `https://openskill.top/skills/web-search/`(中文为默认语言,位于根路径;英文版在 `/en/skills/web-search/`)。
 - 文件名即排序依据之一(见 `order` 字段)。
 
 ## 2. 文件结构

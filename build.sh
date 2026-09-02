@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build script for OpenSkill.Top
-# Bilingual site (zh/en) with Material for MkDocs
+# Single-route bilingual site (default zh at root, en under /en/) with Material for MkDocs
 
 set -e
 
@@ -22,66 +22,6 @@ python3 scripts/gen_skills.py 2>/dev/null || python scripts/gen_skills.py
 # Build site
 echo "Building site..."
 mkdocs build
-
-# Create root index.html (redirect to Chinese by default)
-echo "Creating root index.html..."
-cat > site/index.html << 'EOF'
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>OpenSkill.Top - Agent Skills 导航</title>
-    <meta http-equiv="refresh" content="5; url=zh/">
-    <style>
-        body {
-            font-family: Roboto, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #070b18;
-            color: #fff;
-        }
-        .container {
-            text-align: center;
-        }
-        h1 {
-            font-weight: 300;
-            margin-bottom: 40px;
-            font-size: 2rem;
-        }
-        .languages {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-        .lang-btn {
-            padding: 15px 40px;
-            border: 2px solid #6366f1;
-            color: #a5b0ff;
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s;
-            font-size: 18px;
-        }
-        .lang-btn:hover {
-            background: #6366f1;
-            color: #fff;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>OpenSkill.Top - OpenClaw 公开课</h1>
-        <div class="languages">
-            <a href="zh/" class="lang-btn">中文</a>
-            <a href="en/" class="lang-btn">English</a>
-        </div>
-    </div>
-</body>
-</html>
-EOF
 
 # Copy CNAME file if exists
 if [ -f docs/CNAME ]; then

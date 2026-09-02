@@ -19,20 +19,8 @@ theme:
     - content.tabs.link
     - content.code.copy
 
-extra:
-  alternate:
-    - name: 中文
-      link: /zh/
-      lang: zh
-    - name: English
-      link: /en/
-      lang: en
-
 extra_css:
   - stylesheets/extra.css
-
-extra_javascript:
-  - static/lang-switch.js
 
 markdown_extensions:
   - attr_list
@@ -43,19 +31,29 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
-  - Skills: zh/index.md
+  - Skills: index.md
   - 安装配置:
-      - zh/installation/index.md
-      - 更安全地部署OpenClaw：我的容器化隔离实践: zh/installation/bwp-2026-03-25-openclaw-v1.1.md
-      - 在OpenClaw容器中部署Claude Code（上）：从零开始搭建你的AI开发助手: zh/installation/bwp-2026-03-26-openclawclaude-code-v1.8.md
+      - installation/index.md
+      - 更安全地部署OpenClaw：我的容器化隔离实践: installation/bwp-2026-03-25-openclaw-v1.1.md
+      - 在OpenClaw容器中部署Claude Code（上）：从零开始搭建你的AI开发助手: installation/bwp-2026-03-26-openclawclaude-code-v1.8.md
   - 技能实践:
-      - zh/skill-practice/index.md
+      - skill-practice/index.md
   - 技能分享:
-      - zh/skill-sharing/index.md
-      - QAgent:把"自然语言"变成企业办公新操作系统的智能体助手: zh/skill-sharing/qagent-introduction.md
-      - 基于Claude的可自我进化AI智能体：Warp的规模化落地实践: zh/skill-sharing/xk-2026-08-28-warp-self-evolving-agent-v1.0.md
+      - skill-sharing/index.md
+      - QAgent:把"自然语言"变成企业办公新操作系统的智能体助手: skill-sharing/qagent-introduction.md
+      - 基于Claude的可自我进化AI智能体：Warp的规模化落地实践: skill-sharing/xk-2026-08-28-warp-self-evolving-agent-v1.0.md
   - 应用案例:
-      - zh/use-cases/index.md
+      - use-cases/index.md
 
 plugins:
   - search
+  - i18n:
+      docs_structure: folder
+      languages:
+        - locale: zh
+          name: 中文
+          default: true
+          build: true
+        - locale: en
+          name: English
+          build: true
