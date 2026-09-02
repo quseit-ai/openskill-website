@@ -919,7 +919,7 @@
       </div>
       <div class="os-grid" id="os-grid">
 
-      <article class="os-card" data-cat="视频制作" data-search="srt 白板手绘动画 将 srt 字幕转为按叙事顺序绘制的白板手绘视频,分区遮罩编排 + 流式笔迹绘制,逐步添彩,最终导出 mp4。 视频制作 白板动画 手绘视频 srt 字幕 视频生成">
+      <article class="os-card" data-cat="视频制作" data-search="srt 白板手绘动画 将 srt 字幕转为按叙事顺序绘制的白板手绘视频,分区遮罩编排 + 流式笔迹绘制,逐步添彩,最终导出 mp4。 视频制作 白板动画 手绘视频 srt 字幕 视频生成 srt 白板手绘动画 将 srt 字幕转为按叙事顺序绘制的白板手绘视频,分区遮罩编排 + 流式笔迹绘制,逐步添彩,最终导出 mp4。 白板动画 手绘视频 srt 字幕 视频生成">
         <a class="os-card-main" href="skills/srt-whiteboard-animation/">
           <div class="os-card-head">
             <span class="os-card-cat">视频制作</span>
@@ -928,14 +928,14 @@
           <h3 class="os-card-title">SRT 白板手绘动画</h3>
           <p class="os-card-desc">将 SRT 字幕转为按叙事顺序绘制的白板手绘视频,分区遮罩编排 + 流式笔迹绘制,逐步添彩,最终导出 MP4。</p>
         </a>
-        <button class="os-cover os-cover--video " type="button" aria-label="播放视频讲解" onclick="osOpenVideo('srt-whiteboard-animation')"><img src="/static/covers/srt-whiteboard-animation.jpg" alt="SRT 白板手绘动画" loading="lazy"><span class="os-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span></button>
+        <button class="os-cover os-cover--video " type="button aria-label="播放视频讲解" onclick="osOpenVideo('srt-whiteboard-animation')"><img src="/static/covers/srt-whiteboard-animation.jpg" alt="SRT 白板手绘动画" loading="lazy"><span class="os-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span></button>
         <div class="os-card-foot">
           <a class="os-btn" href="skills/srt-whiteboard-animation/">一键试用</a>
           <a class="os-btn os-btn--ghost" href="https://github.com/geeklee/srt-whiteboard-animation" target="_blank" rel="noopener">项目地址</a>
         </div>
       </article>
 
-      <article class="os-card" data-cat="视频制作" data-search="video shotcraft 把 claude code / codex 变成动效工作室,152 张镜头配方卡 + remotion,自动产出带镜头运动、转场与电影级音效的产品宣传片。 视频制作 宣传片 动效 remotion 镜头配方 卡点 产品视频">
+      <article class="os-card" data-cat="视频制作" data-search="video shotcraft 把 claude code / codex 变成动效工作室,152 张镜头配方卡 + remotion,自动产出带镜头运动、转场与电影级音效的产品宣传片。 视频制作 宣传片 动效 remotion 镜头配方 卡点 产品视频 video shotcraft 把 claude code / codex 变成动效工作室,152 张镜头配方卡 + remotion,自动产出带镜头运动、转场与电影级音效的产品宣传片。 宣传片 动效 remotion 镜头配方 卡点 产品视频">
         <a class="os-card-main" href="skills/video-shotcraft/">
           <div class="os-card-head">
             <span class="os-card-cat">视频制作</span>
@@ -944,7 +944,7 @@
           <h3 class="os-card-title">Video ShotCraft</h3>
           <p class="os-card-desc">把 Claude Code / Codex 变成动效工作室,152 张镜头配方卡 + Remotion,自动产出带镜头运动、转场与电影级音效的产品宣传片。</p>
         </a>
-        <button class="os-cover os-cover--video os-cover--vertical" type="button" aria-label="播放视频讲解" onclick="osOpenVideo('video-shotcraft')"><img src="/static/covers/video-shotcraft.jpg" alt="Video ShotCraft" loading="lazy"><span class="os-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span></button>
+        <button class="os-cover os-cover--video os-cover--vertical" type="button aria-label="播放视频讲解" onclick="osOpenVideo('video-shotcraft')"><img src="/static/covers/video-shotcraft.jpg" alt="Video ShotCraft" loading="lazy"><span class="os-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span></button>
         <div class="os-card-foot">
           <a class="os-btn" href="skills/video-shotcraft/">一键试用</a>
           <a class="os-btn os-btn--ghost" href="https://github.com/Vincentwei1021/video-shotcraft" target="_blank" rel="noopener">项目地址</a>
@@ -969,6 +969,8 @@
 </div>
 
 <script>
+var OS_I18N = { watchOn: "在{platform}观看 ↗" };
+
 (function () {
   var cards = Array.prototype.slice.call(document.querySelectorAll(".os-card"));
   var cats = Array.prototype.slice.call(document.querySelectorAll(".os-cat"));
@@ -1052,7 +1054,7 @@ function osOpenVideo(slug) {
   var u = tpl.dataset.url || "";
   if (u && link) {
     link.href = u;
-    link.textContent = "在" + (tpl.dataset.platform || "原平台") + "观看 ↗";
+    link.textContent = OS_I18N.watchOn.replace("{platform}", tpl.dataset.platform || "");
     link.hidden = false;
   } else if (link) {
     link.hidden = true;

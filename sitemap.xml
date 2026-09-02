@@ -120,6 +120,20 @@
         <xhtml:link rel="alternate" hreflang="zh" href="https://openskill.top/skill-sharing/xk-2026-08-28-warp-self-evolving-agent-v1.0/"/>
     </url>
     <url>
+        <loc>https://openskill.top/en/skills/srt-whiteboard-animation/</loc>
+        <lastmod>2026-09-02</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://openskill.top/en/skills/srt-whiteboard-animation/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://openskill.top/skills/srt-whiteboard-animation/"/>
+    </url>
+    <url>
+        <loc>https://openskill.top/en/skills/video-shotcraft/</loc>
+        <lastmod>2026-09-02</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://openskill.top/en/skills/video-shotcraft/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://openskill.top/skills/video-shotcraft/"/>
+    </url>
+    <url>
         <loc>https://openskill.top/en/use-cases/</loc>
         <lastmod>2026-09-02</lastmod>
         <changefreq>daily</changefreq>
@@ -153,19 +167,5 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://openskill.top/en/skill-sharing/qagent-introduction/"/>
         <xhtml:link rel="alternate" hreflang="zh" href="https://openskill.top/skill-sharing/qagent-introduction/"/>
-    </url>
-    <url>
-        <loc>https://openskill.top/en/skills/srt-whiteboard-animation/</loc>
-        <lastmod>2026-09-02</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://openskill.top/en/skills/srt-whiteboard-animation/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://openskill.top/skills/srt-whiteboard-animation/"/>
-    </url>
-    <url>
-        <loc>https://openskill.top/en/skills/video-shotcraft/</loc>
-        <lastmod>2026-09-02</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://openskill.top/en/skills/video-shotcraft/"/>
-        <xhtml:link rel="alternate" hreflang="zh" href="https://openskill.top/skills/video-shotcraft/"/>
     </url>
 </urlset>
