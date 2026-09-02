@@ -15,6 +15,10 @@ echo ""
 echo "Cleaning previous build..."
 rm -rf site
 
+# Generate Skills homepage & detail pages from skills/*.md
+echo "Generating Skills pages..."
+python3 scripts/gen_skills.py 2>/dev/null || python scripts/gen_skills.py
+
 # Build site
 echo "Building site..."
 mkdocs build
@@ -26,7 +30,7 @@ cat > site/index.html << 'EOF'
 <html>
 <head>
     <meta charset="utf-8">
-    <title>OpenSkill.Top - OpenClaw 公开课</title>
+    <title>OpenSkill.Top - Agent Skills 导航</title>
     <meta http-equiv="refresh" content="5; url=zh/">
     <style>
         body {
@@ -36,7 +40,7 @@ cat > site/index.html << 'EOF'
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: #1a1a1a;
+            background: #070b18;
             color: #fff;
         }
         .container {
@@ -54,15 +58,15 @@ cat > site/index.html << 'EOF'
         }
         .lang-btn {
             padding: 15px 40px;
-            border: 2px solid #ff6d00;
-            color: #ff6d00;
+            border: 2px solid #6366f1;
+            color: #a5b0ff;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 10px;
             transition: all 0.3s;
             font-size: 18px;
         }
         .lang-btn:hover {
-            background: #ff6d00;
+            background: #6366f1;
             color: #fff;
         }
     </style>

@@ -1,1 +1,5 @@
 site
+
+# 由 scripts/gen_skills.py 自动生成,请勿手动编辑
+docs/zh/index.md
+docs/zh/skills/

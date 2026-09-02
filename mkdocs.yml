@@ -1,15 +1,14 @@
 site_name: OpenSkill.Top
 site_url: https://openskill.top
-site_description: OpenClaw 公开课 - 技能自动化工作流
+site_description: 发现与使用强大的 Agent Skills - 技能聚合导航与 OpenClaw 公开课
 site_author: OpenSkill Team
 
 theme:
   name: material
   language: zh
   palette:
-    scheme: slate
-    primary: orange
-    accent: orange
+    scheme: default
+    primary: amber
   logo: static/openskill.png
   features:
     - navigation.tabs
@@ -30,8 +29,16 @@ theme:
 extra_css:
   - stylesheets/extra.css
 
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
 nav:
-  - 首页: zh/index.md
+  - Skills: zh/index.md
   - 安装配置:
       - zh/installation/index.md
       - 更安全地部署OpenClaw：我的容器化隔离实践: zh/installation/bwp-2026-03-25-openclaw-v1.1.md
