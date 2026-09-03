@@ -1,90 +1,108 @@
 #!/bin/bash
 
 # Deploy script for OpenSkill.Top
-# Builds the site and deploys to gh-pages branch
+# Flow: build -> preview & confirm -> commit site/ to gh-pages (via git worktree) -> push
+# The main working tree stays on your current branch the whole time.
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Run build first
-echo "Building site..."
-./build.sh
+# -y / --yes : skip confirmations (non-interactive mode)
+ASSUME_YES=0
+for arg in "$@"; do
+  case "$arg" in
+    -y|--yes) ASSUME_YES=1 ;;
+  esac
+done
 
-# Check if git repository
+confirm() {
+  if [ "$ASSUME_YES" = "1" ]; then return 0; fi
+  local reply
+  read -p "$1" -n 1 -r reply
+  echo
+  [[ $reply =~ ^[Yy]$ ]]
+}
+
+# UTF-8 output for Python on Windows (avoid GBK encode errors in Git Bash)
+export PYTHONUTF8=1
+export PYTHONIOENCODING=utf-8
+
+# --- Locate python / mkdocs (mkdocs may live in user Roaming Scripts, not in PATH) ---
+command -v python >/dev/null 2>&1 || { echo "Error: python not found in PATH"; exit 1; }
+if ! command -v mkdocs >/dev/null 2>&1; then
+  for p in "$HOME"/AppData/Roaming/Python/Python*/Scripts "$HOME"/.local/bin; do
+    [ -x "$p/mkdocs.exe" ] || [ -x "$p/mkdocs" ] || continue
+    PATH="$p:$PATH"
+    break
+  done
+fi
+command -v mkdocs >/dev/null 2>&1 || { echo "Error: mkdocs not found in PATH"; exit 1; }
+
+# --- Sanity checks ---
 if [ ! -d .git ]; then
-    echo "Error: Not a git repository"
-    exit 1
+  echo "Error: Not a git repository"
+  exit 1
 fi
 
-# Get current branch
 CURRENT_BRANCH=$(git branch --show-current)
 echo "Current branch: $CURRENT_BRANCH"
 
-# Check if there are uncommitted changes
-if ! git diff-index --quiet HEAD --; then
-    echo "Warning: You have uncommitted changes. Please commit them first."
-    echo "Uncommitted files:"
-    git status --short
-    read -p "Do you want to continue anyway? (y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "Aborted."
-        exit 1
-    fi
+if ! git diff-index --quiet HEAD -- 2>/dev/null; then
+  echo "Warning: You have uncommitted changes:"
+  git status --short
+  confirm "Continue anyway? (y/N) " || { echo "Aborted."; exit 1; }
 fi
 
-# Deploy to gh-pages
+# --- Build ---
 echo ""
-echo "Deploying to gh-pages branch..."
+echo "Building site..."
+./build.sh
 
-# Create a temporary directory for the site
-TEMP_DIR=$(mktemp -d)
-cp -r site/* "$TEMP_DIR/"
-
-# Switch to gh-pages branch (create if doesn't exist)
-if git show-ref --verify --quiet refs/heads/gh-pages; then
-    git checkout gh-pages
-else
-    git checkout --orphan gh-pages
+# --- Preview & confirm (push only after you say yes) ---
+echo ""
+echo "Build output: site/"
+echo "Preview before pushing:"
+echo "  1) open site/index.html in your browser, or"
+echo "  2) python -m http.server 8088 --directory site  ->  http://localhost:8088"
+if ! confirm "Push site/ to origin/gh-pages now? (y/N) "; then
+  echo "Push skipped. site/ is ready - re-run this script to push after reviewing."
+  exit 0
 fi
 
-# Remove old files (except .git, deploy.sh, build.sh)
-find . -maxdepth 1 ! -name '.git' ! -name 'deploy.sh' ! -name 'build.sh' ! -name '.' ! -name '..' -exec rm -rf {} \;
+# --- Deploy via git worktree (no branch switching in the main working tree) ---
+WORKTREE_DIR="../site-deploy"
+echo ""
+echo "Deploying via worktree at $WORKTREE_DIR ..."
 
-# Copy new site content
-cp -r "$TEMP_DIR"/* .
+# Recreate a clean worktree on gh-pages every run
+git worktree remove --force "$WORKTREE_DIR" 2>/dev/null || true
+rm -rf "$WORKTREE_DIR" 2>/dev/null || true
+git worktree prune
+git worktree add "$WORKTREE_DIR" gh-pages
 
-# Add all files
-git add -A
+# Replace worktree content (except .git) with the fresh build
+find "$WORKTREE_DIR" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+cp -r site/. "$WORKTREE_DIR/"
 
-# Commit
-COMMIT_MSG="Deploy site - $(date '+%Y-%m-%d %H:%M:%S')"
-if git diff --cached --quiet; then
-    echo "No changes to commit"
+git -C "$WORKTREE_DIR" add -A
+if git -C "$WORKTREE_DIR" diff --cached --quiet; then
+  echo "No changes to deploy."
 else
-    git commit -m "$COMMIT_MSG"
-    echo "Committed: $COMMIT_MSG"
+  git -C "$WORKTREE_DIR" commit -m "Deploy site - $(date '+%Y-%m-%d %H:%M:%S')"
 fi
 
-# Push to remote with force (gh-pages is safe to force push)
-read -p "Push to origin/gh-pages? (y/N) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    git push origin gh-pages --force
-    echo ""
-    echo "Deployed successfully!"
-    echo "Site will be available at: https://openskill.top/"
+if git -C "$WORKTREE_DIR" push origin gh-pages; then
+  echo ""
+  echo "Deployed! https://openskill.top/ will update in a few minutes."
+  git worktree remove --force "$WORKTREE_DIR"
 else
-    echo "Push aborted. You can push manually with: git push origin gh-pages --force"
+  echo ""
+  echo "Push failed (network?). The worktree is kept at $WORKTREE_DIR - retry later with:"
+  echo "  git -C $WORKTREE_DIR push origin gh-pages"
+  exit 1
 fi
-
-# Cleanup
-rm -rf "$TEMP_DIR"
-
-# Switch back to original branch
-git checkout "$CURRENT_BRANCH"
 
 echo ""
 echo "Done!"

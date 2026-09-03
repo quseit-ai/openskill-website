@@ -16,8 +16,9 @@ echo "Cleaning previous build..."
 rm -rf site
 
 # Generate Skills homepage & detail pages from skills/*.md
+# (use `python` directly - the `python3` on Windows is a Store stub)
 echo "Generating Skills pages..."
-python3 scripts/gen_skills.py 2>/dev/null || python scripts/gen_skills.py
+python scripts/gen_skills.py
 
 # Build site
 echo "Building site..."
@@ -57,4 +58,4 @@ echo ""
 echo "Output: site/"
 echo ""
 echo "To preview locally:"
-echo "  cd site && python3 -m http.server 8000"
+echo "  cd site && python -m http.server 8000"
