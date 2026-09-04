@@ -35,10 +35,9 @@ body { background: #faf8f5; }
 
 /* ---------- 顶部导航(亮色) ---------- */
 .md-header { background: rgba(250, 248, 245, 0.88) !important; backdrop-filter: blur(12px); box-shadow: 0 1px 0 rgba(90, 70, 40, 0.08); }
-.md-header__title { display: none !important; }
-.md-header__button.md-logo img { width: 192px !important; height: 55.5px !important; }
-.md-header__logo img { height: 82px !important; max-height: 82px !important; }
-.md-header__inner { height: 96px !important; }
+/* Header brand (text-only) */
+.md-header__title { font-size: 1.5rem !important; font-weight: 700; letter-spacing: .3px; }
+.md-header__inner { height: 64px !important; }
 .md-tabs { background: rgba(250, 248, 245, 0.92) !important; }
 .md-tabs__link { color: #6f6a61 !important; font-size: 15px !important; }
 .md-tabs__link--active { color: #9a6d33 !important; }
